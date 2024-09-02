@@ -1,12 +1,11 @@
-from django.shortcuts import render
-from .models import Post, Comment
+from django.shortcuts import render , get_object_or_404
+from .models import Category, Post, Comment
 
 # Create your views here.
-def index_blog(request):
+def blog_index(request):
     posts = Post.objects.all().order_by("-created_on")
-    context={
+    context = {
         "posts": posts,
-        
     }
     return render(request, "blog/index.html", context)
 
@@ -15,11 +14,12 @@ def index_blog(request):
 
 # Category View
 
-def category_blog(request, category):
-    posts = Post.objects.filter(categories__name__contains=category).order_by("-created_on")
+def blog_category(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    posts = Post.objects.filter(categories=category).order_by("-created_on")
     context = {
-        "category": category,
-        "posts": posts
+        "category": category.name,
+        "posts": posts,
     }
     return render(request, "blog/category.html", context)
 
@@ -35,5 +35,6 @@ def blog_detail(request, pk):
         "post": post,
         "comments": comments,
     }
+
     return render(request, "blog/detail.html", context)
 

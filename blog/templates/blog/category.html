@@ -1,5 +1,5 @@
-{% extends "blog/index.html" %}
-
-{% block page_title %}
-<h2>{{ category }}</h2>
-{% endblock page_title %}
+{% for category in post.categories.all %}
+    <a href="{% url 'blog_category' category.slug %}">
+        {{ category.name }}
+    </a>{% if not forloop.last %}, {% endif %}
+{% endfor %}
